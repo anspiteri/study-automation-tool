@@ -14,12 +14,23 @@ study-automation-tool/
         ├── __init__.py
         ├── cli.py
         ├── config.py
-        └── core/
+        ├── core/
+        |   ├── __init__.py
+        |   ├── pdf_parser.py
+        |   ├── summariser.py
+        |   └── card_generator.py
+        └── llm/
             ├── __init__.py
-            ├── pdf_parser.py
-            ├── summariser.py
-            └── card_generator.py
+            ├── base.py
+            └── gemini_client.py
 ```
+
+### Notes
+- `core` should contain all of the logic that is independent of the control layer, i.e. can be wrapped in any UI
+- `cli.py` will be the first interface implemented. Would like to create a web API in the future for self-hosting this tool.
+- `llm` abstracts any logic that is concerned with model API interaction. This is modelled as a strategy design pattern,
+allowing each LLM clients to be interchangeable. This will helpful in the future for integrating Ollama. Initially, I will
+implement cloud hosted clients.
 
 # Development
 1. Setup virtual environment for environment isolation: `python -m venv .venv`
@@ -27,7 +38,7 @@ study-automation-tool/
 3. Install project executable & dependencies: `pip install -e .` ('e' - for editable, sources from `src` files.)
 
 ## Usage
-In command line type: `study`
+In command line type: `study --help` for options and usage.
 
 ## Future Build Options
 1. `pip install .` - copies project to `.venv` site packages
