@@ -1,7 +1,11 @@
 [project]
 name = "study-tool"
 version = "0.1.0"
-dependencies = ["click"]
+dependencies = [
+  "click",
+  "google-genai",
+  "dotenv"
+]
 
 [project.scripts]
 study = "study_tool.cli:main"
