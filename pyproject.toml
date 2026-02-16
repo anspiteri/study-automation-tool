@@ -1,5 +1,5 @@
 [project]
-name = "study-tool"
+name = "StudyBot"
 version = "0.1.0"
 dependencies = [
   "click",
@@ -8,4 +8,4 @@ dependencies = [
 ]
 
 [project.scripts]
-study = "study_tool.cli:main"
+study = "study_bot.cli:main"
