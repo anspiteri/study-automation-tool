@@ -46,3 +46,13 @@ In command line type: `study --help` for options and usage.
 1. `pip install .` - copies project to `.venv` site packages
 2. `python -m build` - builds a "wheel"
 3. Create a binary using `pyinstaller`, `pex`, or `shiv`
+
+# Licensing
+This project is licensed under the AGPL-3.0.
+
+Dependencies:
+- PyMuPDF and pymupdf4llm (AGPL-3.0)
+- Layout extension (PolyForm Noncommercial 1.0.0)
+
+NOTE: The layout extension may only be used for noncommercial purposes.
+Commercial use of features relying on the layout extension is prohibited by its license.

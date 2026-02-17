@@ -4,7 +4,8 @@ version = "0.1.0"
 dependencies = [
   "click",
   "google-genai",
-  "dotenv"
+  "dotenv",
+  "pymupdf4llm[ocr,layout]"
 ]
 
 [project.scripts]
