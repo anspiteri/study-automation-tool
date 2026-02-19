@@ -2,8 +2,8 @@ import os
 import click
 from dotenv import load_dotenv
 # import core modules here
-from study_tool.llm.base import LLMClient
-from study_tool.llm.gemini_client import GeminiClient
+from study_bot.llm.base import LLMClient
+from study_bot.llm.gemini_client import GeminiClient
 
 @click.command()
 @click.option("--provider", default="gemini", help="specify ai vendor")
