@@ -6,13 +6,6 @@ from study_bot.llm.base import LLMClient
 from study_bot.llm.gemini_client import GeminiClient
 
 
-class Mode(enum.StrEnum):
-    PARSE = 'parse'
-    SUMMARY = 'summary'
-    CARDS = 'cards'
-    CONFIG = 'config'
-
-
 def create_llm_client(provider:str, model: str) -> LLMClient:
     client: LLMClient
     api_key: str
@@ -31,35 +24,43 @@ def create_llm_client(provider:str, model: str) -> LLMClient:
         return client
 
 
-@click.command()
-@click.argument(
-    'mode',
-    type=click.Choice(Mode, case_sensitive=False),
-    nargs=1
-)
-# TODO: Make the filename arg not required for 'config' mode & also testing
-#@click.argument(
-#    'filename',
-#    type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True),
-#    nargs=1
-#)
-def main(mode: str): # TODO: add filename: str to main
-    client: LLMClient
-    
+def input_file_argument(f):
+    return click.argument(
+        'filename',
+        type=click.Path(exists=True, dir_okay=False, readable=True),
+        nargs=1
+    )(f)
+
+
+@click.group()
+def main():
+    # Perform any globally required operations here, like loading stored config.
+
     click.echo("This is a study automation tool.")
 
-    if mode == Mode.PARSE:
-        # do unique parse checks & call parse module
-        click.echo("Entered PARSE mode.")
-    elif mode == Mode.SUMMARY:
-        # do unique checks & call summary module
-        click.echo("Entered SUMMARY mode.")
-    elif mode == Mode.CARDS:
-        # do unique checks & call cards module
-        click.echo("Entered CARDS mode.")
-    elif mode == Mode.CONFIG:
-        # enter config (either core module or coupled with cli)
-        click.echo("Entered CONFIG mode.")
+
+@main.command()
+@input_file_argument
+def parse(input_file: str):
+    """
+    Parses a pdf document into structured json and outputs to stdout.
+    """
+    # do unique parse checks & call parse module
+    click.echo("Entered PARSE mode.")
+
+
+@main.command()
+def config():
+    """
+    Allows the change of stored configuration.
+    """
+    click.echo("Entered CONFIG mode.")
+
+
+@main.group
+def generate():
+    # TODO: When 'generate' is specified alone, make the app error and show help.
+    client: LLMClient
 
     # Prototype
     client = create_llm_client("gemini", 'gemini-3-flash-preview')
@@ -72,7 +73,26 @@ def main(mode: str): # TODO: add filename: str to main
         click.echo("No client configured.")
         return 1
 
-    return 0
+
+@generate.command()
+@input_file_argument
+def summary(input_file: str):
+    """
+    Parses a pdf file and generates a concise summary in markdown and outputted to stdout.
+    """
+    # do unique checks & call summary module
+    click.echo("Entered SUMMARY mode.")
+
+
+@generate.command()
+@input_file_argument
+def cards(input_file: str):
+    """
+    Parses a pdf file and generates anki cards in markdown outputted to stdout.
+    """
+    # do unique checks & call cards module
+    click.echo("Entered CARDS mode.")
+
 
 if __name__ == "__main__":
     main()
