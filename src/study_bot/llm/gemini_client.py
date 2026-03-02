@@ -12,3 +12,6 @@ class GeminiClient(LLMClient):
             contents=prompt
         )
         return response.text
+
+    def close(self):
+        self.client.close()
