@@ -1,4 +1,4 @@
-import os, enum
+import os, enum, json
 import click
 from dotenv import load_dotenv
 # import core modules here
@@ -33,6 +33,12 @@ def input_file_argument(f):
     )(f)
 
 
+def output_file_argument(f):
+    return click.argument(
+        'output_file',
+        type=click.File('w')
+    )(f)
+
 @click.group()
 def main():
     """
@@ -45,17 +51,22 @@ def main():
 
 @main.command()
 @input_file_argument
-def parse(input_file: str):
+@output_file_argument
+def parse(input_file: str, output_file: str):
     """
     Parses a pdf document into structured json.
     """
     try:
         json_text = parse_pdf(input_file)
     except (ValueError, FileNotFoundError, RuntimeError) as e:
-        click.echo(f"Error: {e}", err=True)
-        raise click.Abort()
-    else:
-        click.echo(json_text)
+        raise click.ClickException(f"Failed to parse PDF: {e}")
+    
+    # Convert string JSON to Python object for pretty printing
+    try:
+        json_obj = json.loads(json_text)
+        json.dump(json_obj, output_file, indent=2, ensure_ascii=False)
+    except json.JSONDecodeError as e:
+        raise click.ClickException(f"Failed to decode JSON from PDF: {e}")
 
 
 @main.command()
